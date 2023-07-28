@@ -1,50 +1,52 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
 import router from './router/route.js';
+import authRoute from "./router/authRoute.js";
+import passport from 'passport';
+import session from 'express-session';
+import "./passport.js";
 
 
 /** import connection file */
-import connect from './database/conn.js';
-
+import connectDB from './database/conn.js';
+dotenv.config();
+connectDB();
 const app = express()
-
+app.use(
+  session({
+    secret: `$(process.env.COOKIE_SECRET)`,
+    resave:true,
+    saveUninitialized:true,
+  })
+)
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({extended :true}));
 
 /** app middlewares */
-app.use(morgan('tiny'));
+app.use(morgan('dev'));
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
-config();
+
 
 
 /** appliation port */
-const port = process.env.PORT || 8080;
 
 
 /** routes */
-app.use('/api', router) /** apis */
+app.use('/api/v1/main', router) /** apis */
+ app.use("/api/v1/auth",authRoute);
 
+ app.get("/",function(req,res){
+    res.send("<h1>index</h1>");
+  });
 
-app.get('/', (req, res) => {
-    try {
-        res.json("Get Request")
-    } catch (error) {
-        res.json(error)
-    }
-})
-
-
-/** start server only when we have valid connection */
-connect().then(() => {
-    try {
-        app.listen(port, () => {
-            console.log(`Server connected to http://localhost:${port}`)
-        })
-    } catch (error) {
-        console.log("Cannot connect to the server");
-    }
-}).catch(error => {
-    console.log("Invalid Database Connection");
-})
-
+const PORT=process.env.PORT || 8000;
+app.listen(PORT, function() {
+    console.log(`Server started ${process.env.mode}on port ${PORT}`);
+  });
+  

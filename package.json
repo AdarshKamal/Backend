@@ -11,11 +11,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "antd": "^5.7.2",
+    "bcrypt": "^5.1.0",
+    "colors": "^1.4.0",
+    "concurrently": "^8.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^6.6.5",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "npx": "^10.2.2",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "slugify": "^1.6.6",
+    "url": "^0.11.1"
   }
 }
